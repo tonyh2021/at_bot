@@ -2,10 +2,16 @@
 from at_bot.items import ATBotItem
 import logging
 import json
+import time
 
 class ItemPipeline:
     def open_spider(self, spider):
-        self.item_file = open('items.json', 'w')
+        make = spider.settings.get('MAKE')
+        model = spider.settings.get('MODEL')
+        year = spider.settings.get('YEAR')
+        date = time.strftime("%Y_%m_%d", time.localtime(time.time()))
+        file_name = f'data/{make}_{model}_{year}_{date}.json'
+        self.item_file = open(file_name, 'w')
 
     def close_spider(self, spider):
         self.item_file.close()

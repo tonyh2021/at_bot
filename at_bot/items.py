@@ -5,6 +5,36 @@
 
 from scrapy.item import Item, Field
 
+# "make":"Acura",
+# "model":"MDX",
+# "year":"2020",
+# "trim":"Tech SH-AWD (7Year 160K Factory Warranty Included)",
+# "vin":"XXXXXXXXXXXXXXXXX",
+# "price":"38,588",
+# "location":"Aurora",
+# "mileage":"60,022 km",
+# "priceAnalysis":"GreatPrice",
+# "vehicleAge":"",
+# "priceAnalysisDescription":"$4,922 BELOW MARKET",
+# "status":"Used",
+# "stockNumber":"L3241",
+# "carfax":"FreeCarFax",
 class ATBotItem(Item):
     # define the fields for your item here like:
     adId = Field()
+    
+    make = Field()
+    model = Field()
+    year = Field()
+    trim = Field()
+    price = Field()
+    location = Field()
+    mileage = Field()
+    priceAnalysis = Field()
+    vehicleAge = Field()
+    priceAnalysisDescription = Field()
+    status = Field()
+    stockNumber = Field()
+    carfax = Field()
+    
+    gallery = Field()
