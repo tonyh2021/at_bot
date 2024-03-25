@@ -22,10 +22,7 @@ from scrapy.item import Item, Field
 class ATBotItem(Item):
     # define the fields for your item here like:
     adId = Field()
-    
-    make = Field()
-    model = Field()
-    year = Field()
+
     trim = Field()
     price = Field()
     location = Field()
@@ -35,6 +32,13 @@ class ATBotItem(Item):
     priceAnalysisDescription = Field()
     status = Field()
     stockNumber = Field()
+
     carfax = Field()
+    vin = Field()
+    damaged = Field()
+    serviceRecords = Field()
+    openRecall = Field()
+    stolen = Field()
+    oneOwner = Field()
     
-    gallery = Field()
+    item_url = Field()

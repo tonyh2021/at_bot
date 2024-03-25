@@ -46,10 +46,10 @@ class ATSpider(Spider):
                         if (s[-1] == ";"):
                             s = s[:-1]
                             json_data = json.loads(s)
-                            return self.build_item(json_data)
+                            return self.build_item(json_data, response)
                             
         
-    def build_item(self, json_data):
+    def build_item(self, json_data, response):
         item = ATBotItem()
 
         item['adId'] = json_data['adBasicInfo']['adId']
@@ -58,9 +58,6 @@ class ATSpider(Spider):
         item['carfax'] = carfax.get('carProofReportUrl', '')
 
         hero = json_data.get('hero')
-        item['make'] = hero.get('make')
-        item['model'] = hero.get('model')
-        item['year'] = hero.get('year')
         item['trim'] = hero.get('trim', '')
         item['price'] = hero.get('price')
         item['location'] = hero.get('location')
@@ -70,13 +67,24 @@ class ATSpider(Spider):
         item['priceAnalysisDescription'] = hero.get('priceAnalysisDescription')
         item['status'] = hero.get('status')
         item['stockNumber'] = hero.get('stockNumber', '')
+        item['item_url'] = response.url
 
-        gallery_items = json_data['gallery']['items']
-        gallery = ''
-        for x in gallery_items:
-            gallery = gallery + str(x['photoViewerUrl']) + ', '
-        if len(gallery) > 0: 
-            gallery = gallery[:-2]
-        item['gallery'] = gallery
+        if 'https://vhr.carfax.ca/?id=' in item['carfax']:
+            carfax_id = item['carfax'].replace('https://vhr.carfax.ca/?id=', '')
+            carfax_url = f'https://vhr.carfax.ca/Json/GetData?id={carfax_id}'
+            logging.info("Start Request: " + carfax_url)
+            yield response.follow(carfax_url, callback=self.parse_carfax, headers=self.headers, meta={'item': item}, method='POST')
+        else:
+            yield item
 
+    def parse_carfax(self, response):
+        item = response.meta["item"]
+        carfax_info = json.loads(response.text)
+
+        item['oneOwner'] = carfax_info.get('HighlightsViewModel').get('OneOwner', False)
+        item['vin'] = carfax_info.get('VehicleDetailsViewModel').get('Vin', '')
+        item['damaged'] = carfax_info.get('VehicleHistoryTilesViewModel').get('AccidentDamagesType', '0')
+        item['serviceRecords'] = carfax_info.get('VehicleHistoryTilesViewModel').get('ServiceRecords', '0')
+        item['openRecall'] = carfax_info.get('VehicleHistoryTilesViewModel').get('RecallCount', '0')
+        item['stolen'] = carfax_info.get('VehicleHistoryTilesViewModel').get('Stolen', False)
         yield item
