@@ -62,12 +62,10 @@ class ATSpider(Spider):
         item['price'] = hero.get('price')
         item['location'] = hero.get('location')
         item['mileage'] = hero.get('mileage')
-        item['priceAnalysis'] = hero.get('priceAnalysis', '')
-        item['vehicleAge'] = hero.get('vehicleAge')
-        item['priceAnalysisDescription'] = hero.get('priceAnalysisDescription')
-        item['status'] = hero.get('status')
         item['stockNumber'] = hero.get('stockNumber', '')
         item['item_url'] = response.url
+
+        item['conditions'] =  ', '.join(json_data.get('conditionAnalysis').get('options', []))
 
         if 'https://vhr.carfax.ca/?id=' in item['carfax']:
             carfax_id = item['carfax'].replace('https://vhr.carfax.ca/?id=', '')

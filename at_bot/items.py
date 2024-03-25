@@ -27,11 +27,8 @@ class ATBotItem(Item):
     price = Field()
     location = Field()
     mileage = Field()
-    priceAnalysis = Field()
-    vehicleAge = Field()
-    priceAnalysisDescription = Field()
-    status = Field()
     stockNumber = Field()
+    conditions = Field()
 
     carfax = Field()
     vin = Field()
