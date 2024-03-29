@@ -11,10 +11,15 @@ project_settings = get_project_settings()
 
 
 def crawl_process():
-    # creat CrawlerProcess project
-    process = CrawlerProcess(project_settings)
-    process.crawl(ATSpider)
+    cars = project_settings["CARS"]
+    for car in cars:
+        project_settings["MAKE"] = car["make"]
+        project_settings["MODEL"] = car["model"]
+        project_settings["YEAR"] = car["year"]
+        process = CrawlerProcess(project_settings)
+        process.crawl(ATSpider)
     process.start()
+
 
 def main():
     crawl_process()
